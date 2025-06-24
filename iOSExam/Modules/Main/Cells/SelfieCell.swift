@@ -7,46 +7,41 @@
 
 import UIKit
 
-protocol SelfieCellDelegate: AnyObject {
-    func selfieCellDidRequestCamera(_ cell: SelfieCell)
-}
-
 final class SelfieCell: UITableViewCell {
+
+    // MARK: - Properties
     static let identifier = "SelfieCell"
 
-    weak var delegate: SelfieCellDelegate?
+    var hasSelfie: Bool = false {
+        didSet { updateUI() }
+    }
 
+    // MARK: - UI Components
     private let selfieLabel: UILabel = {
         let label = UILabel()
-        label.text = "Tomar Selfe"
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         accessoryType = .disclosureIndicator
         contentView.addSubview(selfieLabel)
         setupConstraints()
-
-        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapCell))
-        contentView.addGestureRecognizer(tap)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Setup
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            selfieLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            selfieLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            selfieLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            selfieLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
-        ])
+        selfieLabel.pinEdgesToSuperview(withInsets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
     }
 
-    @objc private func didTapCell() {
-        delegate?.selfieCellDidRequestCamera(self)
+    private func updateUI() {
+        selfieLabel.text = hasSelfie ? "Opciones" : "Tomar selfie"
     }
 }
