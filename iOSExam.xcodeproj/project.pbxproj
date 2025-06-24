@@ -148,10 +148,12 @@
 				DEVELOPMENT_TEAM = 8P47JR3FHB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOSExam/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Para seguir con la prueba solicito acceso a la cámara para tomar una selfie.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Para seguir con la prueba solicito acceso a la galería para seleccionar una imagen.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -175,10 +177,12 @@
 				DEVELOPMENT_TEAM = 8P47JR3FHB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = iOSExam/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Para seguir con la prueba solicito acceso a la cámara para tomar una selfie.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Para seguir con la prueba solicito acceso a la galería para seleccionar una imagen.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
