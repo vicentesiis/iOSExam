@@ -58,6 +58,7 @@ class ChartView: UIView {
     pieChartView.drawEntryLabelsEnabled = false
     pieChartView.legend.enabled = false
     pieChartView.rotationEnabled = false
+    pieChartView.holeColor = .clear
     
     let total = pregunta.values.reduce(0) { $0 + $1.value }
     let entries = pregunta.values.map {

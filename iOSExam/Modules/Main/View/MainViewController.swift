@@ -19,14 +19,13 @@ final class MainViewController: UIViewController {
   private let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.translatesAutoresizingMaskIntoConstraints = false
-    tableView.backgroundColor = .white
+    tableView.backgroundColor = .clear
     return tableView
   }()
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
     title = "Examen iOS"
     setupUI()
   }
@@ -107,12 +106,16 @@ extension MainViewController: UIImagePickerControllerDelegate, UINavigationContr
     if let image = info[.originalImage] as? UIImage {
       presenter?.updateSelfieImage(image)
     }
-    tableView.reloadData()
-    picker.dismiss(animated: true)
+    runOnMain {
+      self.tableView.reloadData()
+      picker.dismiss(animated: true)
+    }
   }
   
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-    picker.dismiss(animated: true)
+    runOnMain {
+      picker.dismiss(animated: true)
+    }
   }
 }
 

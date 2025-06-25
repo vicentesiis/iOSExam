@@ -27,9 +27,8 @@ final class SelfieCell: UITableViewCell {
   // MARK: - Init
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    accessoryType = .disclosureIndicator
-    contentView.addSubview(selfieLabel)
-    setupConstraints()
+    
+    setupView()
   }
   
   required init?(coder: NSCoder) {
@@ -37,7 +36,12 @@ final class SelfieCell: UITableViewCell {
   }
   
   // MARK: - Setup
-  private func setupConstraints() {
+  private func setupView() {
+    backgroundColor = .clear
+    accessoryType = .disclosureIndicator
+    
+    contentView.addSubview(selfieLabel)
+    
     selfieLabel.pinEdges(to: contentView, insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
   }
   

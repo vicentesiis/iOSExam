@@ -23,19 +23,23 @@ final class NameCell: UITableViewCell {
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    selectionStyle = .none
-    contentView.addSubview(nameTextField)
-    setupConstraints()
     nameTextField.delegate = self
     nameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    setupView()
+  }
+  
+  // MARK: - Setup
+  private func setupView() {
+    selectionStyle = .none
+    backgroundColor = .clear
+    
+    contentView.addSubview(nameTextField)
+    
+    nameTextField.pinEdges(to: contentView, insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-  
-  private func setupConstraints() {
-    nameTextField.pinEdges(to: contentView, insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
   }
   
   @objc private func textFieldDidChange(_ textField: UITextField) {

@@ -22,16 +22,16 @@ class DetailViewController: UIViewController {
   
   // MARK: - UI
   private let tableView: UITableView = {
-    let table = UITableView()
-    table.translatesAutoresizingMaskIntoConstraints = false
-    table.separatorStyle = .none
-    return table
+    let tableView = UITableView()
+    tableView.translatesAutoresizingMaskIntoConstraints = false
+    tableView.separatorStyle = .none
+    tableView.backgroundColor = .clear
+    return tableView
   }()
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
     title = "Detail"
     setupUI()
     presenter.viewDidLoad()

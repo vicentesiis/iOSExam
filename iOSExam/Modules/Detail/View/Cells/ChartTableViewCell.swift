@@ -34,7 +34,6 @@ class ChartTableViewCell: UITableViewCell {
   // MARK: - Init
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    selectionStyle = .none
     setupView()
   }
   
@@ -44,6 +43,9 @@ class ChartTableViewCell: UITableViewCell {
   
   // MARK: - Setup
   private func setupView() {
+    selectionStyle = .none
+    backgroundColor = .clear
+    
     contentView.addSubview(mainStackView)
     
     mainStackView.addArrangedSubview(questionLabel)

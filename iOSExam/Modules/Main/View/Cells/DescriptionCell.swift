@@ -23,7 +23,6 @@ final class DescriptionCell: UITableViewCell {
   // MARK: - Init
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    accessoryType = .disclosureIndicator
     setupView()
   }
   
@@ -33,7 +32,11 @@ final class DescriptionCell: UITableViewCell {
   
   // MARK: - Setup
   private func setupView() {
+    accessoryType = .disclosureIndicator
+    backgroundColor = .clear
+    
     contentView.addSubview(descriptionLabel)
+    
     descriptionLabel.pinEdges(to: contentView, insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
   }
 }
