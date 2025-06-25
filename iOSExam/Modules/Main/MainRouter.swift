@@ -8,7 +8,7 @@
 import UIKit
 
 protocol MainRouterProtocol: AnyObject {
-    func navigateToDetail()
+  func navigateToDetail(with: UserInfo)
 }
 
 final class MainRouter: MainRouterProtocol {
@@ -30,9 +30,10 @@ final class MainRouter: MainRouterProtocol {
   }
   
   // MARK: - MainRouterProtocol
-  func navigateToDetail() {
+  func navigateToDetail(with userInfo: UserInfo) {
     guard let navigation = viewController?.navigationController else { return }
-    let detailVC = DetailRouter.createModule()
+    let detailVC = DetailRouter.createModule(userInfo: userInfo)
     navigation.pushViewController(detailVC, animated: true)
   }
+  
 }

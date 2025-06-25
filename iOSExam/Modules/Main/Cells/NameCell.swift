@@ -10,7 +10,6 @@ import UIKit
 final class NameCell: UITableViewCell {
   static let identifier = "NameCell"
   
-  // MARK: - UI
   let nameTextField: UITextField = {
     let tf = UITextField()
     tf.placeholder = "Ingresa tu nombre"
@@ -20,22 +19,27 @@ final class NameCell: UITableViewCell {
     return tf
   }()
   
-  // MARK: - Init
+  var textDidChange: ((String) -> Void)?
+  
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
     contentView.addSubview(nameTextField)
     setupConstraints()
     nameTextField.delegate = self
+    nameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  // MARK: - Setup
   private func setupConstraints() {
     nameTextField.pinEdges(to: contentView, insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
+  }
+  
+  @objc private func textFieldDidChange(_ textField: UITextField) {
+    textDidChange?(textField.text ?? "")
   }
 }
 

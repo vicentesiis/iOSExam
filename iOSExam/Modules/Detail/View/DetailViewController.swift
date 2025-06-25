@@ -54,7 +54,8 @@ extension DetailViewController: DetailViewProtocol {
   
   func displayQuestions(_ preguntas: [Pregunta]) {
     self.preguntas = preguntas
-    DispatchQueue.main.async {
+    
+    runOnMain {
       self.tableView.reloadData()
     }
   }
@@ -62,7 +63,10 @@ extension DetailViewController: DetailViewProtocol {
   func displayError(_ errorMessage: String) {
     let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .default))
-    present(alert, animated: true)
+    
+    runOnMain {
+      self.present(alert, animated: true)
+    }
   }
 }
 
@@ -79,7 +83,7 @@ extension DetailViewController: UITableViewDataSource {
         return UITableViewCell()
       }
       cell.buttonAction = { [weak self] in
-        print("Footer button tapped")
+        self?.presenter.didTapFooterButton()
       }
       return cell
     } else {

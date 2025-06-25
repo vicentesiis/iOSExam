@@ -14,7 +14,6 @@ final class MainViewController: UIViewController {
   
   // MARK: - Properties
   var presenter: MainPresenterProtocol?
-  private var selfieImage: UIImage?
   
   // MARK: - UI
   private let tableView: UITableView = {
@@ -70,10 +69,14 @@ extension MainViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     switch indexPath.row {
     case 0:
-      return tableView.dequeueReusableCell(withIdentifier: NameCell.identifier, for: indexPath)
+      let cell = tableView.dequeueReusableCell(withIdentifier: NameCell.identifier, for: indexPath) as! NameCell
+      cell.textDidChange = { [weak self] text in
+        self?.presenter?.updateName(text)
+      }
+      return cell
     case 1:
       let cell = tableView.dequeueReusableCell(withIdentifier: SelfieCell.identifier, for: indexPath) as! SelfieCell
-      cell.hasSelfie = (selfieImage != nil)
+      cell.hasSelfie = presenter?.hasSelfie ?? false
       return cell
     case 2:
       let cell = tableView.dequeueReusableCell(withIdentifier: DescriptionCell.identifier, for: indexPath) as! DescriptionCell
@@ -102,7 +105,7 @@ extension MainViewController: UITableViewDelegate {
 extension MainViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     if let image = info[.originalImage] as? UIImage {
-      selfieImage = image
+      presenter?.updateSelfieImage(image)
     }
     tableView.reloadData()
     picker.dismiss(animated: true)
@@ -118,13 +121,13 @@ private extension MainViewController {
   func presentSelfieOptions() {
     let alert = UIAlertController(title: "Selfie", message: "Elige una opción", preferredStyle: .actionSheet)
     
-    if let image = selfieImage {
+    if let image = presenter?.currentSelfieImage {
       alert.addAction(UIAlertAction(title: "Ver selfie", style: .default) { [weak self] _ in
         self?.presentSelfiePreview(image: image)
       })
     }
     
-    let selfieTitle = selfieImage == nil ? "Tomar selfie" : "Retomar selfie"
+    let selfieTitle = (presenter?.hasSelfie ?? false) ? "Retomar selfie" : "Tomar selfie"
     alert.addAction(UIAlertAction(title: selfieTitle, style: .default) { [weak self] _ in
       self?.presentCameraOrLibrary()
     })
@@ -161,7 +164,7 @@ private extension MainViewController {
       presentPicker(sourceType: .camera)
     case .notDetermined:
       AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-        DispatchQueue.main.async {
+        runOnMain {
           if granted {
             self?.presentPicker(sourceType: .camera)
           } else {
