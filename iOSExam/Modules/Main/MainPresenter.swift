@@ -12,6 +12,7 @@ protocol MainPresenterProtocol: AnyObject {
   var descriptionText: String { get }
   var hasSelfie: Bool { get }
   var currentSelfieImage: UIImage? { get }
+  
   func didTapGoToDetail()
   func updateName(_ name: String)
   func updateSelfieImage(_ image: UIImage)

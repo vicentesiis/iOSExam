@@ -10,7 +10,8 @@ import DGCharts
 
 protocol DetailViewProtocol: AnyObject {
   func displayQuestions(_ preguntas: [Pregunta])
-  func displayError(_ errorMessage: String)
+  func displayError(_ message: String)
+  func displaySuccess(_ message: String)
 }
 
 class DetailViewController: UIViewController {
@@ -60,10 +61,17 @@ extension DetailViewController: DetailViewProtocol {
     }
   }
   
-  func displayError(_ errorMessage: String) {
-    let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
+  func displayError(_ message: String) {
+    let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .default))
-    
+    runOnMain {
+      self.present(alert, animated: true)
+    }
+  }
+
+  func displaySuccess(_ message: String) {
+    let alert = UIAlertController(title: "Éxito", message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .default))
     runOnMain {
       self.present(alert, animated: true)
     }

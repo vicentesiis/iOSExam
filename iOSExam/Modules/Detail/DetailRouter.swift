@@ -18,12 +18,14 @@ final class DetailRouter {
     let service = DetailService(canFetch: false)
     let interactor = DetailInteractor(service: service)
     let router = DetailRouter()
-    
+    let firestoreService = FirestoreService()
+
     let presenter = DetailPresenter(
       view: view,
       interactor: interactor,
       router: router,
-      userInfo: userInfo
+      userInfo: userInfo,
+      firestoreService: firestoreService
     )
     
     view.presenter = presenter

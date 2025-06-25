@@ -8,6 +8,6 @@
 import UIKit
 
 struct UserInfo {
-  let name: String?
+  let name: String
   let selfieImage: UIImage?
 }
