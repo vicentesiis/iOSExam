@@ -8,44 +8,47 @@
 import UIKit
 
 final class NameCell: UITableViewCell {
-    static let identifier = "NameCell"
-    
-    let nameTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Ingresa tu nombre"
-        tf.borderStyle = .roundedRect
-        tf.autocapitalizationType = .words
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        return tf
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
-        contentView.addSubview(nameTextField)
-        setupConstraints()
-        nameTextField.delegate = self
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupConstraints() {
-        nameTextField.pinEdgesToSuperview(withInsets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
-    }
+  static let identifier = "NameCell"
+  
+  // MARK: - UI
+  let nameTextField: UITextField = {
+    let tf = UITextField()
+    tf.placeholder = "Ingresa tu nombre"
+    tf.borderStyle = .roundedRect
+    tf.autocapitalizationType = .words
+    tf.translatesAutoresizingMaskIntoConstraints = false
+    return tf
+  }()
+  
+  // MARK: - Init
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    selectionStyle = .none
+    contentView.addSubview(nameTextField)
+    setupConstraints()
+    nameTextField.delegate = self
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  // MARK: - Setup
+  private func setupConstraints() {
+    nameTextField.pinEdges(to: contentView, insets: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
+  }
 }
 
 // MARK: - UITextFieldDelegate
 extension NameCell: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let allowedCharacters = CharacterSet.letters.union(.whitespaces)
-        let characterSet = CharacterSet(charactersIn: string)
-        return allowedCharacters.isSuperset(of: characterSet)
-    }
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    return true
+  }
+  
+  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    let allowedCharacters = CharacterSet.letters.union(.whitespaces)
+    let characterSet = CharacterSet(charactersIn: string)
+    return allowedCharacters.isSuperset(of: characterSet)
+  }
 }

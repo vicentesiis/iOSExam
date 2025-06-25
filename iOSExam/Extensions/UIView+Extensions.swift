@@ -8,15 +8,25 @@
 import UIKit
 
 extension UIView {
-    func pinEdgesToSuperview(withInsets insets: UIEdgeInsets = .zero) {
-        guard let superview = self.superview else { fatalError("No superview for \(self)") }
-        
-        translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            topAnchor.constraint(equalTo: superview.topAnchor, constant: insets.top),
-            leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: insets.left),
-            trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -insets.right),
-            bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -insets.bottom)
-        ])
-    }
+  
+  /// Pins all edges of the view to the specified view or its safeAreaLayoutGuide, with optional insets.
+  func pinEdges(
+    to view: UIView,
+    insets: UIEdgeInsets = .zero,
+    useSafeArea: Bool = false
+  ) {
+    translatesAutoresizingMaskIntoConstraints = false
+    
+    let topAnchorToUse = useSafeArea ? view.safeAreaLayoutGuide.topAnchor : view.topAnchor
+    let leadingAnchorToUse = useSafeArea ? view.safeAreaLayoutGuide.leadingAnchor : view.leadingAnchor
+    let trailingAnchorToUse = useSafeArea ? view.safeAreaLayoutGuide.trailingAnchor : view.trailingAnchor
+    let bottomAnchorToUse = useSafeArea ? view.safeAreaLayoutGuide.bottomAnchor : view.bottomAnchor
+    
+    NSLayoutConstraint.activate([
+      topAnchor.constraint(equalTo: topAnchorToUse, constant: insets.top),
+      leadingAnchor.constraint(equalTo: leadingAnchorToUse, constant: insets.left),
+      trailingAnchor.constraint(equalTo: trailingAnchorToUse, constant: -insets.right),
+      bottomAnchor.constraint(equalTo: bottomAnchorToUse, constant: -insets.bottom)
+    ])
+  }
 }

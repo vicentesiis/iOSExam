@@ -8,21 +8,15 @@
 import UIKit
 import AVFoundation
 
-protocol MainViewProtocol: AnyObject {
-  func reloadTable()
-  func presentSelfieOptions()
-  func presentSelfiePreview(image: UIImage)
-  func presentImagePicker(_ picker: UIImagePickerController)
-}
+protocol MainViewProtocol: AnyObject {}
 
 final class MainViewController: UIViewController {
   
   // MARK: - Properties
   var presenter: MainPresenterProtocol?
-  
   private var selfieImage: UIImage?
   
-  // MARK: - UI Components
+  // MARK: - UI
   private let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -36,14 +30,12 @@ final class MainViewController: UIViewController {
     view.backgroundColor = .white
     title = "Examen iOS"
     setupUI()
-    setupTapToDismissKeyboard()
-    presenter?.viewDidLoad()
   }
   
   // MARK: - Setup
   private func setupUI() {
     view.addSubview(tableView)
-    setupConstraints()
+    tableView.pinEdges(to: view, useSafeArea: true)
     
     tableView.delegate = self
     tableView.dataSource = self
@@ -51,66 +43,23 @@ final class MainViewController: UIViewController {
     tableView.register(NameCell.self, forCellReuseIdentifier: NameCell.identifier)
     tableView.register(SelfieCell.self, forCellReuseIdentifier: SelfieCell.identifier)
     tableView.register(DescriptionCell.self, forCellReuseIdentifier: DescriptionCell.identifier)
-  }
-  
-  private func setupConstraints() {
-    tableView.pinEdgesToSuperview()
-  }
-  
-  private func setupTapToDismissKeyboard() {
-    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-    tapGesture.cancelsTouchesInView = false
-    view.addGestureRecognizer(tapGesture)
+    
+    let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+    tap.cancelsTouchesInView = false
+    view.addGestureRecognizer(tap)
   }
   
   @objc private func dismissKeyboard() {
     view.endEditing(true)
   }
+  
+  @objc private func sendButtonTapped() {
+    presenter?.didTapGoToDetail()
+  }
 }
 
-// MARK: - MainViewProtocol
-extension MainViewController: MainViewProtocol {
-  func reloadTable() {
-    tableView.reloadData()
-  }
-  
-  func presentSelfieOptions() {
-    let alert = UIAlertController(title: "Selfie", message: "Elige una opción", preferredStyle: .actionSheet)
-    
-    if selfieImage != nil {
-      alert.addAction(UIAlertAction(title: "Ver selfie", style: .default) { [weak self] _ in
-        guard let image = self?.selfieImage else { return }
-        self?.presentSelfiePreview(image: image)
-      })
-    }
-    
-    alert.addAction(UIAlertAction(title: selfieImage == nil ? "Tomar selfie" : "Retomar selfie", style: .default) { [weak self] _ in
-      self?.presentCameraOrLibrary()
-    })
-    
-    alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
-    
-    present(alert, animated: true)
-  }
-  
-  func presentSelfiePreview(image: UIImage) {
-    let previewVC = UIViewController()
-    previewVC.view.backgroundColor = .black
-    
-    let imageView = UIImageView(image: image)
-    imageView.contentMode = .scaleAspectFit
-    imageView.frame = previewVC.view.bounds
-    imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    
-    previewVC.view.addSubview(imageView)
-    
-    present(previewVC, animated: true)
-  }
-  
-  func presentImagePicker(_ picker: UIImagePickerController) {
-    present(picker, animated: true)
-  }
-}
+// MARK: - MainViewProtocol (Future Interactions)
+extension MainViewController: MainViewProtocol {}
 
 // MARK: - UITableViewDataSource
 extension MainViewController: UITableViewDataSource {
@@ -139,52 +88,82 @@ extension MainViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension MainViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    if indexPath.row == 1 {
-      presentSelfieOptions()
-    }
     tableView.deselectRow(at: indexPath, animated: true)
+    
+    switch indexPath.row {
+    case 1: presentSelfieOptions()
+    case 2: sendButtonTapped()
+    default: break
+    }
   }
 }
 
-// MARK: - UIImagePickerControllerDelegate & UINavigationControllerDelegate
+// MARK: - UIImagePickerControllerDelegate
 extension MainViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     if let image = info[.originalImage] as? UIImage {
       selfieImage = image
     }
-    DispatchQueue.main.async {
-      self.reloadTable()
-      picker.dismiss(animated: true)
-    }
+    tableView.reloadData()
+    picker.dismiss(animated: true)
   }
   
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-    DispatchQueue.main.async {
-      picker.dismiss(animated: true)
-    }
+    picker.dismiss(animated: true)
   }
 }
 
-// MARK: - Private Camera Helpers
+// MARK: - Selfie Helper Methods
 private extension MainViewController {
+  func presentSelfieOptions() {
+    let alert = UIAlertController(title: "Selfie", message: "Elige una opción", preferredStyle: .actionSheet)
+    
+    if let image = selfieImage {
+      alert.addAction(UIAlertAction(title: "Ver selfie", style: .default) { [weak self] _ in
+        self?.presentSelfiePreview(image: image)
+      })
+    }
+    
+    let selfieTitle = selfieImage == nil ? "Tomar selfie" : "Retomar selfie"
+    alert.addAction(UIAlertAction(title: selfieTitle, style: .default) { [weak self] _ in
+      self?.presentCameraOrLibrary()
+    })
+    
+    alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+    present(alert, animated: true)
+  }
+  
+  func presentSelfiePreview(image: UIImage) {
+    let previewVC = UIViewController()
+    previewVC.view.backgroundColor = .black
+    
+    let imageView = UIImageView(image: image)
+    imageView.contentMode = .scaleAspectFit
+    imageView.frame = previewVC.view.bounds
+    imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    previewVC.view.addSubview(imageView)
+    
+    present(previewVC, animated: true)
+  }
+  
   func presentCameraOrLibrary() {
 #if targetEnvironment(simulator)
-    presentPhotoLibrary()
+    presentPicker(sourceType: .photoLibrary)
 #else
-    presentCamera()
+    checkCameraPermissionAndPresent()
 #endif
   }
   
-  func presentCamera() {
-    let authStatus = AVCaptureDevice.authorizationStatus(for: .video)
-    switch authStatus {
+  func checkCameraPermissionAndPresent() {
+    let status = AVCaptureDevice.authorizationStatus(for: .video)
+    switch status {
     case .authorized:
-      showCameraPicker()
+      presentPicker(sourceType: .camera)
     case .notDetermined:
       AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
         DispatchQueue.main.async {
           if granted {
-            self?.showCameraPicker()
+            self?.presentPicker(sourceType: .camera)
           } else {
             print("Permission denied")
           }
@@ -193,23 +172,18 @@ private extension MainViewController {
     case .denied, .restricted:
       print("Permission denied")
     @unknown default:
-      print("Unknown auth status")
+      break
     }
   }
   
-  func showCameraPicker() {
-    guard UIImagePickerController.isSourceTypeAvailable(.camera) else { return }
+  func presentPicker(sourceType: UIImagePickerController.SourceType) {
+    guard UIImagePickerController.isSourceTypeAvailable(sourceType) else { return }
     let picker = UIImagePickerController()
-    picker.sourceType = .camera
-    picker.cameraDevice = .front
+    picker.sourceType = sourceType
     picker.delegate = self
-    presentImagePicker(picker)
-  }
-  
-  func presentPhotoLibrary() {
-    let picker = UIImagePickerController()
-    picker.sourceType = .photoLibrary
-    picker.delegate = self
-    presentImagePicker(picker)
+    if sourceType == .camera {
+      picker.cameraDevice = .front
+    }
+    present(picker, animated: true)
   }
 }

@@ -7,20 +7,19 @@
 
 import UIKit
 
-import UIKit
+protocol MainRouterProtocol: AnyObject {
+    func navigateToDetail()
+}
 
-final class MainRouter {
+final class MainRouter: MainRouterProtocol {
+  // MARK: - Properties
   weak var viewController: UIViewController?
-  private weak var appRouter: AppRouter?
   
-  init(appRouter: AppRouter) {
-    self.appRouter = appRouter
-  }
-  
-  static func createModule(appRouter: AppRouter) -> UIViewController {
+  // MARK: - Create Module
+  static func createModule() -> UIViewController {
     let view = MainViewController()
     let interactor = MainInteractor()
-    let router = MainRouter(appRouter: appRouter)
+    let router = MainRouter()
     
     let presenter = MainPresenter(view: view, interactor: interactor, router: router)
     
@@ -28,5 +27,12 @@ final class MainRouter {
     router.viewController = view
     
     return view
+  }
+  
+  // MARK: - MainRouterProtocol
+  func navigateToDetail() {
+    guard let navigation = viewController?.navigationController else { return }
+    let detailVC = DetailRouter.createModule()
+    navigation.pushViewController(detailVC, animated: true)
   }
 }

@@ -17,7 +17,7 @@ final class AppRouter {
     }
 
     func start() {
-        let mainVC = MainRouter.createModule(appRouter: self)
+        let mainVC = MainRouter.createModule()
         navigationController.viewControllers = [mainVC]
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
