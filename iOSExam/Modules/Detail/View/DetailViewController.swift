@@ -10,7 +10,8 @@ import DGCharts
 
 protocol DetailViewProtocol: AnyObject {
   func displayQuestions(_ preguntas: [Pregunta])
-  func displayError(_ errorMessage: String)
+  func displayError(_ message: String)
+  func displaySuccess(_ message: String)
 }
 
 class DetailViewController: UIViewController {
@@ -21,16 +22,16 @@ class DetailViewController: UIViewController {
   
   // MARK: - UI
   private let tableView: UITableView = {
-    let table = UITableView()
-    table.translatesAutoresizingMaskIntoConstraints = false
-    table.separatorStyle = .none
-    return table
+    let tableView = UITableView()
+    tableView.translatesAutoresizingMaskIntoConstraints = false
+    tableView.separatorStyle = .none
+    tableView.backgroundColor = .clear
+    return tableView
   }()
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .white
     title = "Detail"
     setupUI()
     presenter.viewDidLoad()
@@ -54,15 +55,26 @@ extension DetailViewController: DetailViewProtocol {
   
   func displayQuestions(_ preguntas: [Pregunta]) {
     self.preguntas = preguntas
-    DispatchQueue.main.async {
+    
+    runOnMain {
       self.tableView.reloadData()
     }
   }
   
-  func displayError(_ errorMessage: String) {
-    let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
+  func displayError(_ message: String) {
+    let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .default))
-    present(alert, animated: true)
+    runOnMain {
+      self.present(alert, animated: true)
+    }
+  }
+
+  func displaySuccess(_ message: String) {
+    let alert = UIAlertController(title: "Éxito", message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .default))
+    runOnMain {
+      self.present(alert, animated: true)
+    }
   }
 }
 
@@ -79,7 +91,7 @@ extension DetailViewController: UITableViewDataSource {
         return UITableViewCell()
       }
       cell.buttonAction = { [weak self] in
-        print("Footer button tapped")
+        self?.presenter.didTapFooterButton()
       }
       return cell
     } else {

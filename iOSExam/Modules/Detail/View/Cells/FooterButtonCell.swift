@@ -37,6 +37,7 @@ class FooterButtonCell: UITableViewCell {
   
   // MARK: - Setup
   private func setupView() {
+    backgroundColor = .clear
     contentView.addSubview(button)
     
     button.pinEdges(to: contentView, insets: UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16))

@@ -13,12 +13,20 @@ final class DetailRouter {
   weak var viewController: UIViewController?
   
   // MARK: - Create Module
-  static func createModule() -> DetailViewController {
+  static func createModule(userInfo: UserInfo) -> DetailViewController {
     let view = DetailViewController()
     let service = DetailService(canFetch: false)
     let interactor = DetailInteractor(service: service)
     let router = DetailRouter()
-    let presenter = DetailPresenter(view: view, interactor: interactor, router: router)
+    let firestoreService = FirestoreService()
+
+    let presenter = DetailPresenter(
+      view: view,
+      interactor: interactor,
+      router: router,
+      userInfo: userInfo,
+      firestoreService: firestoreService
+    )
     
     view.presenter = presenter
     interactor.presenter = presenter
