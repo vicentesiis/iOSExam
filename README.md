@@ -34,3 +34,9 @@ Es el memory garbage collector de Swift. Cuando se crea un objeto strong, el con
 10. Análisis
 
 El color final es amarillo, porque al momento de crear la instancia se le asigna en el viewDidLoad el color rojo, pero después, en el AppDelegate, que fue quien lo instanció, se le asigna el color amarillo y el viewDidLoad ya había pasado.
+
+## Notas:
+
+Como pueden cuando se muestra (push) la vista de las gráficas se ve sketchy, es porque casi todos los componentes de UI tienen el backgroundColor = .clear, con el fin de que el AppRouter pueda actualizar en tiempo real el color de las vistas.  
+
+La mejor practica sería tener los observers en cada modulo, en sus interactors, pero para efectos prácticos, el AppRouter puede aplicar el color global. 
